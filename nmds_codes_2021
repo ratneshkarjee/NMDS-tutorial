@@ -1,0 +1,99 @@
+# Tutorial for Non-metric Multidimentional Scale (NMDS)
+# Tutorial is a modification of various reference tutorial 
+
+# Package required 
+library(BiodiversityR) # used for NMDS
+library(ggplot2) # used for plotting graph
+library(viridis) # used for colour 
+library(tidyr) # used for data manupulation
+
+
+#I used open source species occurance  data availabe at vegan package
+# You can import your own data and follow this tutorial
+# For your kind information your data should be in following sequence
+# Your data must follow in following format
+# Site/Habitat/Group must be in rows and Species in Column
+
+# 'varespec' is open source data available at vegan or BiodiversityR package
+# Data loaded using vegan or BiodiversityR package
+data(varespec) # used to load the data set 
+nrow(varespec) # To check no of rows
+
+
+
+# I randomly assigned three groups ("ABC", "XYZ") as Site 
+# It has 24 rows so I decided to divided into three group
+# This may vary (You can used own site/group)
+
+# Assign Site or Group
+abc <- rep("ABC", 12)
+xyz <- rep("XYZ", 12)
+
+# To make a data frame of site
+# Rearrange the data frame
+df1 <- cbind.data.frame(abc, xyz) 
+df2 <- data.frame(Site = c(df1[,"abc"], df1[,"xyz"]))
+head(df2)
+
+# Now, again we can check the
+data(varespec)
+head(varespec)
+
+
+# Now we perform NMDS
+nmds <- metaMDS(varespec,"bray")
+nmds # To check the stress value 
+
+
+# You can prin t your graph 
+#To save your graph follow this
+jpeg(file = "stressplot1.jpg", width = 20, 
+     height = 20, units = "cm", res = 800)
+stressplot(nmds)
+dev.off()
+
+
+# Now, extract NMDS value
+# Create df with extracted NMDS values
+# Next step, "sites' and 'species" are default argument
+# Use the scores function from vegan/Biodiversity to extract NMDS value
+# Extract value for species
+sp.score <- as.data.frame(scores(nmds, "species"))  
+sp.score$species <- rownames(sp.score)#Assign values against species
+head(sp.score)  
+
+
+# Extract value for Site/Hbitat/Group
+df.score <- as.data.frame(scores(nmds, "sites"))
+df.score <- cbind(as.data.frame(df.score), Site = df2$Site)
+head(df.score) # To check extracted values against site
+# Please note thatb 'species' and 'sites' are default argument
+
+
+
+# Calculate group centroid  
+df.cent <- aggregate(cbind(NMDS1, NMDS2) ~ Site, data = df.score, FUN = mean)
+sp.cent <- aggregate(cbind(NMDS1, NMDS2) ~ species, data=sp.score, FUN = mean)
+
+
+# Plot graph 
+ggplot()+ geom_jitter(data = df.score, aes(NMDS1, NMDS2,color=Site))+ 
+  stat_density_2d(data=df.score, 
+                  aes(NMDS1, NMDS2, color =Site, fill=Site),
+                  geom = "polygon", alpha=.3) +
+  geom_text(data = sp.score, aes(NMDS1, NMDS2, label=species), size=3) +
+  scale_fill_viridis(discrete=TRUE) + 
+  scale_color_viridis(discrete=TRUE) + theme_bw()+ coord_equal()
+
+
+#===================ECOLOGY==IN===R===============================#
+With regards,
+Ratnesh Karjee
+M.Sc in Wildife Science
+Purulia, West Bengal, India
+ratneshkarjee@yahoo.com
+https://www.researchgate.net/profile/Ratnesh-Karjee
+https://github.com/wildlifekarjee17
+
+  
+  
