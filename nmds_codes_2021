@@ -21,7 +21,7 @@ nrow(varespec) # To check no of rows
 
 
 
-# I randomly assigned three groups ("ABC", "XYZ") as Site 
+# I randomly assign two groups ("ABC", "XYZ") as Site 
 # It has 24 rows so I decided to divided into three group
 # This may vary (You can used own site/group)
 
@@ -86,14 +86,7 @@ ggplot()+ geom_jitter(data = df.score, aes(NMDS1, NMDS2,color=Site))+
   scale_color_viridis(discrete=TRUE) + theme_bw()+ coord_equal()
 
 
-#===================ECOLOGY==IN===R===============================#
-With regards,
-Ratnesh Karjee
-M.Sc in Wildife Science
-Purulia, West Bengal, India
-ratneshkarjee@yahoo.com
-https://www.researchgate.net/profile/Ratnesh-Karjee
-https://github.com/wildlifekarjee17
+#Thanks Ecology in R facebook group for assisting me. 
 
   
   
